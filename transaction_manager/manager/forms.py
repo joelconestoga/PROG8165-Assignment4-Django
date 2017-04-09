@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
+from .models import Transaction
 
 class RegisterForm(forms.ModelForm):
 
@@ -19,3 +20,9 @@ class RegisterForm(forms.ModelForm):
 			self.add_error("password", "Passwords don't match.")
 
 
+class TransactionForm(forms.ModelForm):
+
+	name = forms.CharField()
+	class Meta:
+		model = Transaction
+		fields = ['name', 'value']
