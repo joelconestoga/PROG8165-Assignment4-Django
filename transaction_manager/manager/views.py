@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from .forms import RegisterForm, TransactionForm
-from .models import Transaction
+from .forms import RegisterForm, TransactionForm, CategoryForm
+from .models import Transaction, Category
 
 # Create your views here.
 def index(request) :
@@ -68,3 +68,18 @@ def add_transaction(request):
 		return index(request)
 
 	return render(request, 'manager/add_transaction.html', {'form': form})
+
+
+def add_category(request):
+		
+	if not request.user.is_authenticated():
+		return render(request, 'manager/log_in.html')
+
+	form = CategoryForm(request.POST or None)
+
+	if form.is_valid():
+		category = form.save(commit=False)
+		category.save()
+		return index(request)
+
+	return render(request, 'manager/add_category.html', {'form': form})
