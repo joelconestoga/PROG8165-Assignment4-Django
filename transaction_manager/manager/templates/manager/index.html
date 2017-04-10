@@ -1,7 +1,7 @@
 {% extends 'manager/base.html' %}
 
 {% block body %}
-<div class="albums-container container-fluid">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-9">
             <h2>{{ user.username }}'s Transactions</h2>
@@ -10,6 +10,12 @@
             <a href="{% url 'manager:add_transaction' %}">
                 <button type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-plus"></span>&nbsp; Add Transaction
+                </button>
+            </a>
+            <a href="{% url 'manager:log_out' %}">
+                <button type="button" class="btn btn-danger">
+            &nbsp;
+                    Logout
                 </button>
             </a>
         </div>

@@ -2,11 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, TransactionForm, CategoryForm
 from .models import Transaction, Category
 
-# Create your views here.
 def index(request) :
 	if not request.user.is_authenticated():
 		return render(request, 'manager/log_in.html')
@@ -32,6 +31,9 @@ def log_in(request):
 	
 	return index(request)
 
+def log_out(request):
+    logout(request)
+    return render(request, 'manager/log_in.html')
 
 def register(request):
 	form = RegisterForm(request.POST or None)
