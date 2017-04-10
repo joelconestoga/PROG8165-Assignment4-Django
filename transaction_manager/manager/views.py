@@ -1,15 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
-from .forms import RegisterForm, TransactionForm
-from .models import Transaction
+from django.contrib.auth import authenticate, login, logout
+from .forms import RegisterForm, TransactionForm, CategoryForm
+from .models import Transaction, Category
 
-# Create your views here.
 def index(request) :
 	if not request.user.is_authenticated():
-		return render(request, 'manager/log_in.html')
+		return redirect('/manager/log_in/')
 
 	transactions = Transaction.objects.filter(user=request.user)
 	return render(request, 'manager/index.html', {'transactions': transactions})
@@ -32,6 +31,9 @@ def log_in(request):
 	
 	return index(request)
 
+def log_out(request):
+    logout(request)
+    return redirect('/manager/log_in/')
 
 def register(request):
 	form = RegisterForm(request.POST or None)
@@ -57,7 +59,7 @@ def register(request):
 
 def add_transaction(request):
 	if not request.user.is_authenticated():
-		return render(request, 'manager/log_in.html')
+		return redirect('/manager/log_in/')
 
 	form = TransactionForm(request.POST or None)
 
@@ -68,3 +70,25 @@ def add_transaction(request):
 		return index(request)
 
 	return render(request, 'manager/add_transaction.html', {'form': form})
+
+def categories(request):
+	if not request.user.is_authenticated():
+		return redirect('/manager/log_in/')
+
+	categories = Category.objects.all()
+	return render(request, 'manager/categories.html', {'categories': categories})
+
+
+def add_category(request):
+		
+	if not request.user.is_authenticated():
+		return redirect('/manager/log_in/')
+
+	form = CategoryForm(request.POST or None)
+
+	if form.is_valid():
+		category = form.save(commit=False)
+		category.save()
+		return categories(request)
+
+	return render(request, 'manager/add_category.html', {'form': form})
